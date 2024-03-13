@@ -33,9 +33,6 @@ jobs:
 
     - name: Build and Test
       run: |
-        git clone https://github.com/raphw/byte-buddy
-        cd byte-buddy
-        git rev-parse HEAD
         mvn clean install -DskipTests -pl byte-buddy-dep -am
         mvn -pl byte-buddy-dep test -Dtest=net.bytebuddy.pool.TypePoolDefaultMethodDescriptionTest#testExceptions
         mvn -pl byte-buddy-dep edu.illinois:nondex-maven-plugin:2.1.1:nondex -Dtest=net.bytebuddy.pool.TypePoolDefaultMethodDescriptionTest#testExceptions
