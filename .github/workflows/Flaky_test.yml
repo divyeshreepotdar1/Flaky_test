@@ -1,6 +1,9 @@
 name: Flaky Test Check
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # Adjust this to match your repository's default branch
 
 jobs:
   flaky-test-check:
@@ -11,12 +14,14 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v2  # Updated action to use Node.js 20
       with:
         java-version: '11'
 
     - name: Install Maven
-      run: sudo apt install maven
+      run: |
+        sudo apt update  # Update package lists
+        sudo apt install maven
 
     - name: Build and Test
       run: |
