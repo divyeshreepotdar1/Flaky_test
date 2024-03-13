@@ -9,31 +9,28 @@ jobs:
   flaky-test-check:
     runs-on: ubuntu-latest
 
-  
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
 
-    - name: Set up JDK
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'adopt'
+      - name: Install Maven
+        run: |
+          sudo apt update  # Update package lists
+          sudo apt install maven
 
-    - name: Install Maven
-      run: |
-        sudo apt update  # Update package lists
-        sudo apt install maven
-
-    - name: Build and Test
-      run: |
-        git rev-parse HEAD
-        mvn clean install -DskipTests -pl byte-buddy-dep -am
-        mvn -pl byte-buddy-dep test -Dtest=net.bytebuddy.pool.TypePoolDefaultMethodDescriptionTest#testExceptions
-        mvn -pl byte-buddy-dep edu.illinois:nondex-maven-plugin:2.1.1:nondex -Dtest=net.bytebuddy.pool.TypePoolDefaultMethodDescriptionTest#testExceptions
+      - name: Build and Test
+        run: |
+          mvn clean install -DskipTests -pl byte-buddy-dep -am
+          mvn -pl byte-buddy-dep test -Dtest=net.bytebuddy.pool.TypePoolDefaultMethodDescriptionTest#testExceptions
+          mvn -pl byte-buddy-dep edu.illinois:nondex-maven-plugin:2.1.1:nondex -Dtest=net.bytebuddy.pool.TypePoolDefaultMethodDescriptionTest#testExceptions
